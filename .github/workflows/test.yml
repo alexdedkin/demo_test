@@ -1,109 +1,77 @@
-# Название workflow
-name: testops_python_parallel
+name: Pytest with Allure TestOps
 
-# переменные окружения
-env:
-  ENDPOINT: https://demo.qatools.cloud/
-  PROJECT_ID: 429
-  TOKEN: ${{ secrets.ALLURE_TOKEN }}
-  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
-  ALLURE_RESULTS: "allure-results"
-  BROWSER: ${{ inputs.BROWSER || 'OperaGX' }}
-  OS: ${{ inputs.OS || 'Win_11' }}
-  BRANCH: ${{ github.ref_name }}
-
-#  Триггеры для запуска workflow
+# Запуск workflow:
+# - при push в main
+# - при pull request
+# - вручную (workflow_dispatch) с параметрами для TestOps
 on:
-# по расписанию
-#  schedule:
-#    - cron: "0 */24 * * *"
-
-# пуш и пулл реквест
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#      - main
-     
-# вручную    
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
-      BROWSER:
-        description: Browser
-        required: false
-        default: "OperaGX"
-      OS:
-        description: OS
-        required: false
-        default: "Win_11"
       ALLURE_JOB_RUN_ID:
-        description: "ALLURE_JOB_RUN_ID - service parameter (leave blank)"
+        description: 'Job Run ID для TestOps'
         required: false
-        default: ""
       ALLURE_USERNAME:
-        description: "ALLURE_USERNAME - service parameter (leave blank)"
+        description: 'Имя пользователя для TestOps'
         required: false
-        default: ""
-        
+
 jobs:
-  autotests: 
-    name: Run tests
+  tests:
     runs-on: ubuntu-latest
-    
+    environment: TestOps
+
+    env:
+      # Переменные для allurectl
+      ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+      ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+      ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+      ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+      ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
+      ALLURE_RESULTS: "allure-results"
+
     steps:
-      - uses: actions/checkout@v3
+      # 1. Клонируем репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # подготовка окружения
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # 2. Устанавливаем Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
-      # установка зависимостей
+      # 3. Устанавливаем зависимости
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt 
-          # для распараллеливания тестов нужен pytest-xdist в  requirements.txt
-          
-      # отладочные шаги, для проверки работы с переменными
-      - name: Debug environment variables
-        run: |
-          echo "ENDPOINT: $endpoint"
-          echo "PROJECT_ID: $project_id"
-        env:
-          allure_endpoint: ${{ env.ENDPOINT }}
-          allure_project_id: ${{ env.PROJECT_ID }}
+          pip install pytest allure-pytest
 
-      # установка allurectl (связующее звено с ТестОпс)
-      - name: Install allurectl
-#        uses: allure-framework/setup-allurectl@v1
+      # 4. Debug: проверяем, что Environment secrets подтянулись
+      - name: Debug env
         run: |
-          curl -o allurectl -L "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
+          echo "ALLURE_ENDPOINT=${ALLURE_ENDPOINT}"
+          echo "ALLURE_PROJECT_ID=${ALLURE_PROJECT_ID}"
+          echo "ALLURE_JOB_RUN_ID=${ALLURE_JOB_RUN_ID}"
+          echo "ALLURE_USERNAME=${ALLURE_USERNAME}"
+          echo "ALLURE_RESULTS=${ALLURE_RESULTS}"
+
+      # 5. Скачиваем allurectl напрямую через curl
+      - name: Download allurectl
+        run: |
+          curl -L -o allurectl "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
           chmod +x allurectl
-#        with:
-#          allure-endpoint: ${{ env.ENDPOINT }}
-#          allure-token: ${{ env.ALLURE_TOKEN }}
-#          allure-project-id: ${{ env.PROJECT_ID }}
 
-      # создаем директорию для результатов
-      - name: Ensure allure-results directory exists
-        run: |
-          mkdir -p ${ALLURE_RESULTS}
-
-      # запускаем тесты и сразу следим за выполнением
-      # отправляем данные в ТестОпс по мере поступления
-      - name: Run tests
+      # 6. Запускаем pytest через allurectl watch
+      - name: Run tests with allurectl
         run: |
           ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
-#        with:
-#          allure-endpoint: ${{ env.ENDPOINT }}
-#          allure-token: ${{ env.ALLURE_TOKEN }}
-#          allure-project-id: ${{ env.PROJECT_ID }}
 
-      # проверяем если файлы с отчетами
-      - name: Check allure-results directory
-        if: always()
-        run: |
-          ls -la ${ALLURE_RESULTS}
+      # 7. Сохраняем результаты как артефакт на GitHub (опционально)
+      - name: Upload Allure Results Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: $ALLURE_RESULTS
