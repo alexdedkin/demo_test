@@ -96,7 +96,7 @@ jobs:
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests
         run: |
-          allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
+          ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 #        with:
 #          allure-endpoint: ${{ env.ENDPOINT }}
 #          allure-token: ${{ env.ALLURE_TOKEN }}
