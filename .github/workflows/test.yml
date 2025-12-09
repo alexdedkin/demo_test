@@ -95,9 +95,7 @@ jobs:
       # запускаем тесты и сразу следим за выполнением
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests
-        run: |
-          ./allurectl watch -- pytest -n 4 --alluredir=${ALLURE_RESULTS} --capture=no
-          chmod +x allurectl
+        run: allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 #        with:
 #          allure-endpoint: ${{ env.ENDPOINT }}
 #          allure-token: ${{ env.ALLURE_TOKEN }}
