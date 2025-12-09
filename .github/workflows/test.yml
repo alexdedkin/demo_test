@@ -49,8 +49,10 @@ jobs:
           pip install pytest allure-pytest
 
       # 4. Скачиваем allurectl через официальный Action
-      - name: Setup allurectl
-        uses: allure-framework/setup-allurectl@v1
+      - name: Download allurectl
+        run: |
+          curl -L -o allurectl "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
+          chmod +x allurectl
         with:
           allure-endpoint: ${{ secrets.ALLURE_ENDPOINT }}
           allure-token: ${{ secrets.ALLURE_TOKEN }}
