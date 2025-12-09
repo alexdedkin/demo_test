@@ -96,10 +96,10 @@ jobs:
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests
         run: allurectl watch -- pytest -n 4 --alluredir=${ALLURE_RESULTS} --capture=no
-        with:
-          allure-endpoint: ${{ env.ENDPOINT }}
-          allure-token: ${{ env.ALLURE_TOKEN }}
-          allure-project-id: ${{ env.PROJECT_ID }}
+#        with:
+#          allure-endpoint: ${{ env.ENDPOINT }}
+#          allure-token: ${{ env.ALLURE_TOKEN }}
+#          allure-project-id: ${{ env.PROJECT_ID }}
 
       # проверяем если файлы с отчетами
       - name: Check allure-results directory
