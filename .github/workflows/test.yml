@@ -1,5 +1,14 @@
 name: Pytest with Allure TestOps
 
+env:
+  # Переменные для allurectl
+  ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+  ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
+  ALLURE_RESULTS: "allure-results"
+
 # Запуск workflow:
 # - при push в main
 # - при pull request
@@ -22,16 +31,6 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     environment: test_env
-
-    env:
-      # Переменные для allurectl
-      ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
-      ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
-      ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
-      ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
-      ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
-      ALLURE_RESULTS: "allure-results"
-
     steps:
       # 1. Клонируем репозиторий
       - name: Checkout repository
