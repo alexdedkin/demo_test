@@ -78,7 +78,10 @@ jobs:
 
       # установка allurectl (связующее звено с ТестОпс)
       - name: Install allurectl
-        uses: allure-framework/setup-allurectl@v1
+#        uses: allure-framework/setup-allurectl@v1
+        run: |
+          curl -o allurectl -L "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
+          chmod +x allurectl
         with:
           allure-endpoint: ${{ env.ENDPOINT }}
           allure-token: ${{ env.ALLURE_TOKEN }}
