@@ -5,9 +5,11 @@ __pycache__/
 
 # C extensions
 *.so
+*.pyc
 
 # Distribution / packaging
 .Python
+.idea/
 allure-results/
 .kilocode/
 .vscode/
