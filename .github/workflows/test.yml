@@ -48,20 +48,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest allure-pytest
 
-      # 4. Скачиваем allurectl через официальный Action
+      # 4. Скачиваем allurectl напрямую через curl
       - name: Download allurectl
         run: |
           curl -L -o allurectl "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
           chmod +x allurectl
-        with:
-          allure-endpoint: ${{ secrets.ALLURE_ENDPOINT }}
-          allure-token: ${{ secrets.ALLURE_TOKEN }}
-          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
 
       # 5. Запускаем pytest через allurectl watch
       - name: Run tests with allurectl
         run: |
-          allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
+          ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 
       # 6. Сохраняем результаты как артефакт на GitHub (опционально)
       - name: Upload Allure Results Artifact
