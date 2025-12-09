@@ -1,4 +1,4 @@
-name: testops_python_parallel
+name: testops_python
 
 on:
   push:
