@@ -1,0 +1,49 @@
+name: Run Pytest with Allure
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest allure-pytest
+
+      - name: Download allurectl
+        run: |
+          curl -o allurectl -L "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
+          chmod +x allurectl
+
+      - name: Run pytest
+        run: pytest --alluredir=allure-results
+
+      - name: Upload results to Allure TestOps
+        env:
+          ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+          ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+          ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+        run: |
+          ./allurectl upload \
+            --project-id "$ALLURE_PROJECT_ID" \
+            --launch-name "GitHub Actions Run - $GITHUB_REF_NAME" \
+            --results "allure-results"
+
+      - name: Save allure results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
