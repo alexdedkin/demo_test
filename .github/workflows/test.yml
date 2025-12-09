@@ -82,10 +82,6 @@ jobs:
         run: |
           curl -L -o allurectl "https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64"
           chmod +x allurectl
-#        with:
-#          allure-endpoint: ${{ env.ENDPOINT }}
-#          allure-token: ${{ env.ALLURE_TOKEN }}
-#          allure-project-id: ${{ env.PROJECT_ID }}
 
       # создаем директорию для результатов
       - name: Ensure allure-results directory exists
@@ -95,6 +91,10 @@ jobs:
       # запускаем тесты и сразу следим за выполнением
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests with allurectl
+        with:
+          allure-endpoint: ${{ env.ENDPOINT }}
+          allure-token: ${{ env.ALLURE_TOKEN }}
+          allure-project-id: ${{ env.PROJECT_ID }}
         run: |
           ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 
