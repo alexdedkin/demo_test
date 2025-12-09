@@ -12,7 +12,7 @@ env:
   OS: ${{ inputs.OS || 'Win_11' }}
   BRANCH: ${{ github.ref_name }}
 
-# Триггеры для запуска workflow
+#  Триггеры для запуска workflow
 on:
 # по расписанию
 #  schedule:
