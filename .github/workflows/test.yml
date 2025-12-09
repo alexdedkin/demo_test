@@ -91,12 +91,12 @@ jobs:
       # запускаем тесты и сразу следим за выполнением
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests with allurectl
+        run: |
+          ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
         with:
           allure-endpoint: ${{ env.ENDPOINT }}
           allure-token: ${{ env.ALLURE_TOKEN }}
           allure-project-id: ${{ env.PROJECT_ID }}
-        run: |
-          ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 
       # проверяем если файлы с отчетами
       - name: Check allure-results directory
