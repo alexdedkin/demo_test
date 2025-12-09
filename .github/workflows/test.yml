@@ -96,7 +96,7 @@ jobs:
       # отправляем данные в ТестОпс по мере поступления
       - name: Run tests with allurectl
         run: |
-          allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
+          ./allurectl watch -- pytest --alluredir=$ALLURE_RESULTS
 
       # проверяем если файлы с отчетами
       - name: Check allure-results directory
