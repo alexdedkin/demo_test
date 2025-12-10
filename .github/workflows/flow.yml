@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  ALLURE_ENDPOINT: https://demo.qatools.cloud/api
+  ALLURE_ENDPOINT: https://demo.qatools.cloud
   ALLURE_PROJECT_ID: 429
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_RESULTS: allure-results
