@@ -10,7 +10,7 @@ import allure
 ])
 def test_sum_detailed(x, y, expected):
     result = func_sum(x, y)
-    with allure.step(f'Проверить сумму: {x=} + {y=} = {result=}'):
+    with allure.step(f'Проверить сумму: {x} + {y} = {result}'):
         assert result == expected, f"{x} + {y} = {result}, ожидалось {expected}"
 
 def func_sum(x, y):
