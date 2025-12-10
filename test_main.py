@@ -17,9 +17,10 @@ def func_sum(x, y):
     return x+y
 
 @allure.id("3518")
-@allure.title("frist case ")
-@allure.tag("e2e")
+@allure.title("Проверка авторизации")
+@allure.tag("e2e", "regress")
 @allure.label("owner", "dedkin")
+@allure.description('Это поле описание "description"')
 @allure.feature("o2-1213 Авторизация")
 def test_something():
     with allure.step("Auth"):
