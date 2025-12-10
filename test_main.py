@@ -10,14 +10,14 @@ import allure
 ])
 def test_sum_detailed(x, y, expected):
     result = func_sum(x, y)
-    with allure.step(f'Проверить сумму: {x} + {y} = {result}'):
-        assert result == expected, f"{x} + {y} = {result}, ожидалось {expected}"
+    with allure.step('Проверить сумму: {{x}} + {{y}} = {{expected}}'):
+        assert result == expected, f"'{{{{x}}}} + {{{{y}}}} = {result}, ожидалось {{{{expected}}}}'"
 
 def func_sum(x, y):
     return x+y
 
 @allure.id("3518")
-@allure.title("first case ")
+@allure.title("frist case ")
 @allure.tag("e2e")
 @allure.label("owner", "dedkin")
 @allure.feature("o2-1213 Авторизация")
