@@ -4,6 +4,13 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      ALLURE_JOB_RUN_ID:
+        description: "TestOps service parameter. Leave blank."
+        required: false
+      ALLURE_USERNAME:
+        description: "TestOps service parameter. Leave blank"
+        required: false
 
 env:
   ALLURE_ENDPOINT: https://demo.qatools.cloud
