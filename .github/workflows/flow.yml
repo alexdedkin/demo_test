@@ -4,26 +4,9 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-    inputs:
-      BROWSER:
-        description: Browser
-        required: false
-        default: "OperaGX"
-      OS:
-        description: OS
-        required: false
-        default: "Win_11"
-      ALLURE_JOB_RUN_ID:
-        description: "ALLURE_JOB_RUN_ID - leave blank"
-        required: false
-        default: ""
-      ALLURE_USERNAME:
-        description: "ALLURE_USERNAME - leave blank"
-        required: false
-        default: ""
 
 env:
-  ALLURE_ENDPOINT: https://demo.qatools.cloud/api   # ← ВАЖНО: должен быть /api
+  ALLURE_ENDPOINT: https://demo.qatools.cloud/api
   ALLURE_PROJECT_ID: 429
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_RESULTS: allure-results
@@ -46,24 +29,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Setup Allurectl
+        uses: allure-framework/setup-allurectl@v1
+        with:
+          allurectl-version: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Prepare results dir
         run: mkdir -p $ALLURE_RESULTS
 
       - name: Run tests with Allure TestOps integration
-        uses: allure-framework/allurectl-action@v2
-        with:
-          project-id: ${{ env.ALLURE_PROJECT_ID }}
-          token: ${{ secrets.ALLURE_TOKEN }}
-          allure-results: ${{ env.ALLURE_RESULTS }}
-          launch-name: "GitHub Run #${{ github.run_number }}"
-        env:
-          ALLURE_ENDPOINT: ${{ env.ALLURE_ENDPOINT }}
-          BROWSER: ${{ github.event.inputs.BROWSER }}
-          OS: ${{ github.event.inputs.OS }}
-
-      - name: Run pytest
         run: |
-          pytest --alluredir=$ALLURE_RESULTS
+          allurectl watch \
+            --endpoint $ALLURE_ENDPOINT \
+            --project-id $ALLURE_PROJECT_ID \
+            --token $ALLURE_TOKEN \
+            -- pytest --alluredir=$ALLURE_RESULTS
 
       - name: Check allure-results directory
         if: always()
