@@ -3,7 +3,7 @@ import allure
 
 @allure.id("3521")
 # @allure.issue("https://ababkin.atlassian.net/browse/KAN-2","KAN-2")
-@allure.title("Проверка суммы с параметрами2")
+@allure.title("Проверка суммы с параметрами")
 @allure.tag("e2e", "regress")
 @allure.label("owner", "dedkin")
 @allure.description('Это поле описание "description"')
