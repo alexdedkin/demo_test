@@ -2,6 +2,7 @@ import pytest
 import allure
 
 @allure.id("3521")
+@allure.issue("jira","KAN-2")
 @allure.title("Проверка суммы с параметрами")
 @allure.tag("e2e", "regress")
 @allure.label("owner", "dedkin")
@@ -27,7 +28,6 @@ def func_sum(x, y):
 @allure.label("owner", "dedkin")
 @allure.description('Это поле описание "description"')
 @allure.feature("o2-1213 Авторизация")
-@allure.issue("KAN-2")
 def test_something():
     with allure.step("Auth"):
         with allure.step("Перейти на страницу авторизации"):
