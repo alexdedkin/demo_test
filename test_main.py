@@ -84,3 +84,13 @@ def test_something():
             # Например: username = driver.find_element(By.CLASS_NAME, "username").text
             # assert "Иван Иванов" in username
             pass
+
+@allure.id("3532")
+@allure.title("Сломанный тест-кейс")
+@allure.label("owner", "dedkin")
+def test_broken():
+    with allure.step("Подготовка тестовых данных"):
+        with allure.step("Тест сломался с Exception"):
+            result = 1 / 0
+    with allure.step("Тело теста"):
+        pass
