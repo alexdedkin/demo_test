@@ -1,12 +1,17 @@
 import pytest
 import allure
 
-
+@allure.id("3521")
+@allure.title("Проверка суммы с параметрами")
+@allure.tag("e2e", "regress")
+@allure.label("owner", "dedkin")
+@allure.description('Это поле описание "description"')
+@allure.feature("o2-1214 Сумма чисел")
 @pytest.mark.parametrize('x, y, expected', [
     pytest.param(1, 2, 3, id="1+2=3"),
     pytest.param(5, 6, 11, id="5+6=11"),
     pytest.param(-1, 1, 0, id="-1+1=0"),
-    pytest.param(0, 0, 0, id="0+0=0"),
+    pytest.param(0, 0, 1, id="0+0=0"),
 ])
 def test_sum_detailed(x, y, expected):
     result = func_sum(x, y)
