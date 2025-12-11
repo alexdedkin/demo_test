@@ -2,7 +2,6 @@ import pytest
 import allure
 from page_objects.auth_page import AuthPage
 
-# Список пользователей и их ожидаемых результатов
 USERS_DATA = [
     ("standard_user", "secret_sauce", True, "Успешная авторизация стандартного пользователя"),
     ("locked_out_user", "secret_sauce", False, "Блокировка пользователя"),
@@ -12,9 +11,10 @@ USERS_DATA = [
     ("visual_user", "secret_sauce", True, "Успешная авторизация визуального пользователя")
 ]
 
+@allure.id("3535")
 @pytest.mark.parametrize("username, password, expected_success, description", USERS_DATA)
-@allure.feature("Авторизация")
-@allure.story("Тестирование авторизации пользователей")
+@allure.feature("O2-1213 Авторизация")
+@allure.story("O2-1215 Тестирование авторизации")
 @allure.title("Тест авторизации пользователя {username}")
 def test_user_authentication(page, username, password, expected_success, description):
     """Тест авторизации различных пользователей"""
@@ -24,11 +24,8 @@ def test_user_authentication(page, username, password, expected_success, descrip
         
         # Открываем страницу авторизации
         auth_page.open()
-        
-        # Выполняем авторизацию
         auth_page.login(username, password)
-        
-        # Проверяем результат
+
         if expected_success:
             with allure.step("Проверка успешной авторизации"):
                 assert auth_page.is_login_successful(), f"Авторизация пользователя {username} не удалась, хотя ожидалась успешная авторизация"
@@ -40,8 +37,9 @@ def test_user_authentication(page, username, password, expected_success, descrip
                 allure.attach(error_text, name="Сообщение об ошибке", attachment_type=allure.attachment_type.TEXT)
                 assert "Epic sadface" in error_text or "locked out" in error_text.lower(), f"Ожидалось сообщение об ошибке, получено: {error_text}"
 
-@allure.feature("Авторизация")
-@allure.story("Тестирование неуспешной авторизации с неверным паролем")
+@allure.id("3533")
+@allure.feature("O2-1213 Авторизация")
+@allure.story("O2-1215 Тестирование авторизации")
 @allure.title("Тест авторизации с неверным паролем")
 def test_invalid_password_authentication(page):
     """Тест авторизации с неверным паролем"""
@@ -56,8 +54,9 @@ def test_invalid_password_authentication(page):
             allure.attach(error_text, name="Сообщение об ошибке", attachment_type=allure.attachment_type.TEXT)
             assert "Epic sadface" in error_text, f"Ожидалось сообщение об ошибке, получено: {error_text}"
 
-@allure.feature("Авторизация")
-@allure.story("Тестирование неуспешной авторизации без ввода данных")
+@allure.id("3534")
+@allure.feature("O2-1213 Авторизация")
+@allure.story("O2-1215 Тестирование авторизации")
 @allure.title("Тест авторизации без ввода данных")
 def test_empty_fields_authentication(page):
     """Тест авторизации без ввода данных"""
