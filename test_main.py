@@ -81,10 +81,8 @@ def test_skip():
 
 @allure.title("Пропущенный тест-кейс")
 @allure.label("owner", "dedkin")
-@pytest.mark.xfail("Пропускаем если падаетл")
+@pytest.mark.xfail(reason = "Игнорируем если падает")
 def test_xfail():
     with allure.step("Подготовка тестовых данных"):
         with allure.step("Тест сломался с Exception"):
-            result = 1 / 0
-    with allure.step("Тело теста"):
-        pass
+            assert False
