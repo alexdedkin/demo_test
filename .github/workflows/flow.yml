@@ -17,6 +17,8 @@ env:
   ALLURE_PROJECT_ID: 429
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_RESULTS: allure-results
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
 
 jobs:
   autotests:
