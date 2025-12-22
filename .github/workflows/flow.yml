@@ -43,7 +43,7 @@ jobs:
           allurectl-version: latest
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare results dir
+      - name: Prepare results dirk
         run: mkdir -p $ALLURE_RESULTS
 
       - name: Run tests with Allure TestOps integration
@@ -51,8 +51,9 @@ jobs:
           allurectl watch \
             --endpoint $ALLURE_ENDPOINT \
             --project-id $ALLURE_PROJECT_ID \
-            --token $ALLURE_TOKEN \
-            -- pytest --alluredir=$ALLURE_RESULTS
+            --token $ALLURE_TOKEN &
+          sleep 2
+          pytest --alluredir=$ALLURE_RESULTS
 
       - name: Check allure-results directory
         if: always()
